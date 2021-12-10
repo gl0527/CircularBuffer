@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.16)
-project(CircularBuffer VERSION 1.0.0 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.7)
+project(CircularBuffer VERSION 1.1.0 LANGUAGES CXX)
 
 include(CTest)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
