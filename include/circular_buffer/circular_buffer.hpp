@@ -1,10 +1,6 @@
 #pragma once
 
-#include <cstdlib>
 #include <cassert>
-#include <cstring>
-
-// Interface
 
 template<typename T, std::size_t N>
 class CircularBuffer {
@@ -23,8 +19,6 @@ private:
     std::size_t m_data_end{0};
     std::size_t m_size{0};
 };
-
-// Implementation
 
 template<typename T, std::size_t N>
 void CircularBuffer<T, N>::push(T const &elem, bool overwrite) {
