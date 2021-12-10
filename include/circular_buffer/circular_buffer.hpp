@@ -13,8 +13,6 @@ constexpr void inc(std::size_t& n, std::size_t m) {
 template<typename T, std::size_t N>
 class CircularBuffer {
 public:
-    CircularBuffer();
-
     void push(T const& elem, bool overwrite = true);
     T pop();
 
@@ -25,21 +23,12 @@ public:
 
 private:
     T m_buffer[N];
-    std::size_t m_data_start;
-    std::size_t m_data_end;
-    std::size_t m_size;
+    std::size_t m_data_start{0};
+    std::size_t m_data_end{0};
+    std::size_t m_size{0};
 };
 
 // Implementation
-
-template<typename T, std::size_t N>
-inline CircularBuffer<T,N>::CircularBuffer()
-    : m_data_start{0}
-    , m_data_end{0}
-    , m_size{0}
-{
-    memset(m_buffer, 0, sizeof(m_buffer));
-}
 
 template<typename T, std::size_t N>
 void CircularBuffer<T, N>::push(T const &elem, bool overwrite) {
