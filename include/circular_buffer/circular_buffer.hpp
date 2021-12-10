@@ -4,10 +4,6 @@
 #include <cassert>
 #include <cstring>
 
-constexpr void inc(std::size_t& n, std::size_t m) {
-    n = (n + 1) % m;
-}
-
 // Interface
 
 template<typename T, std::size_t N>
@@ -36,9 +32,9 @@ void CircularBuffer<T, N>::push(T const &elem, bool overwrite) {
         return;
     }
     m_buffer[m_data_end] = elem;
-    inc(m_data_end, N);
+    m_data_end = (m_data_end + 1) % N;
     if (m_size == N) {
-        inc(m_data_start, N);
+        m_data_start = (m_data_start + 1) % N;
     } else {
         ++m_size;
     }
@@ -48,7 +44,7 @@ template<typename T, std::size_t N>
 T CircularBuffer<T, N>::pop() {
     assert(m_size > 0);
     T tmp = m_buffer[m_data_start];
-    inc(m_data_start, N);
+    m_data_start = (m_data_start + 1) % N;
     --m_size;
     return tmp;
 }
