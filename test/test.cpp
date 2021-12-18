@@ -48,7 +48,7 @@ TEST(CircularBufferTest, SizeTest) {
 }
 
 TEST(CircularBufferTest, CapacityTest) {
-    CircularBuffer<short, 2> cb;
+    constexpr CircularBuffer<short, 2> cb;
     EXPECT_EQ(cb.capacity(), 2);
 }
 
