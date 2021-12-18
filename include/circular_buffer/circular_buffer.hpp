@@ -14,7 +14,7 @@ public:
     bool full() const noexcept;
 
 private:
-    T m_buffer[N];
+    T m_buffer[N]{};
     std::size_t m_data_start{0};
     std::size_t m_data_end{0};
     std::size_t m_size{0};
