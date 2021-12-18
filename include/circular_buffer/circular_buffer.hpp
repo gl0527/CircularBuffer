@@ -5,13 +5,13 @@
 template<typename T, std::size_t N>
 class CircularBuffer {
 public:
-    void push(T const& elem, bool overwrite = true);
-    T pop();
+    void push(T const& elem, bool overwrite = true) noexcept;
+    T pop() noexcept;
 
-    std::size_t size() const;
-    std::size_t capacity() const;
-    bool empty() const;
-    bool full() const;
+    std::size_t size() const noexcept;
+    constexpr std::size_t capacity() const noexcept;
+    bool empty() const noexcept;
+    bool full() const noexcept;
 
 private:
     T m_buffer[N];
@@ -21,7 +21,7 @@ private:
 };
 
 template<typename T, std::size_t N>
-void CircularBuffer<T, N>::push(T const &elem, bool overwrite) {
+void CircularBuffer<T, N>::push(T const &elem, bool overwrite) noexcept {
     if (m_size == N && !overwrite) {
         return;
     }
@@ -35,7 +35,7 @@ void CircularBuffer<T, N>::push(T const &elem, bool overwrite) {
 }
 
 template<typename T, std::size_t N>
-T CircularBuffer<T, N>::pop() {
+T CircularBuffer<T, N>::pop() noexcept {
     assert(m_size > 0);
     T tmp = m_buffer[m_data_start];
     m_data_start = (m_data_start + 1) % N;
@@ -44,21 +44,21 @@ T CircularBuffer<T, N>::pop() {
 }
 
 template<typename T, std::size_t N>
-inline std::size_t CircularBuffer<T, N>::size() const {
+inline std::size_t CircularBuffer<T, N>::size() const noexcept {
     return m_size;
 }
 
 template<typename T, std::size_t N>
-inline std::size_t CircularBuffer<T, N>::capacity() const {
+constexpr std::size_t CircularBuffer<T, N>::capacity() const noexcept {
     return N;
 }
 
 template<typename T, std::size_t N>
-inline bool CircularBuffer<T, N>::empty() const {
+inline bool CircularBuffer<T, N>::empty() const noexcept {
     return m_size == 0;
 }
 
 template<typename T, std::size_t N>
-inline bool CircularBuffer<T, N>::full() const {
+inline bool CircularBuffer<T, N>::full() const noexcept {
     return m_size == N;
 }
