@@ -32,6 +32,18 @@ TEST(CircularBufferTest, PopTest) {
     EXPECT_EQ(cb.pop(), 4);
 }
 
+TEST(CircularBufferTest, ResetTest) {
+    CircularBuffer<int, 4> cb;
+    cb.push(2);
+    cb.push(4);
+    cb.push(-9);
+    cb.reset();
+    EXPECT_TRUE(cb.empty());
+    cb.push(1);
+    EXPECT_EQ(1, cb.pop());
+    EXPECT_DEATH(cb.pop(), "");
+}
+
 TEST(CircularBufferTest, SizeTest) {
     CircularBuffer<int, 3> cb;
     EXPECT_EQ(cb.size(), 0);

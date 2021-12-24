@@ -7,6 +7,7 @@ class CircularBuffer {
 public:
     void push(T const& elem, bool overwrite = true) noexcept;
     T pop() noexcept;
+    void reset() noexcept;
 
     std::size_t size() const noexcept;
     constexpr std::size_t capacity() const noexcept;
@@ -41,6 +42,13 @@ T CircularBuffer<T, N>::pop() noexcept {
     m_data_start = (m_data_start + 1) % N;
     --m_size;
     return tmp;
+}
+
+template<typename T, std::size_t N>
+inline void CircularBuffer<T, N>::reset() noexcept {
+    m_data_start = 0;
+    m_data_end = 0;
+    m_size = 0;
 }
 
 template<typename T, std::size_t N>
