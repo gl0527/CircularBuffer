@@ -6,7 +6,8 @@
  * @date 02 Jan 2022
  */
 
-#pragma once
+#ifndef CIRCULAR_BUFFER_HPP
+#define CIRCULAR_BUFFER_HPP
 
 #include <cassert>
 
@@ -121,3 +122,5 @@ template<typename T, std::size_t N>
 inline bool CircularBuffer<T, N>::full() const noexcept {
     return m_size == N;
 }
+
+#endif  // #ifndef CIRCULAR_BUFFER_HPP
