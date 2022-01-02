@@ -23,16 +23,16 @@ private:
 
 template<typename T, std::size_t N>
 void CircularBuffer<T, N>::push(T const &elem, bool overwrite) noexcept {
-    if (m_size == N && !overwrite) {
-        return;
-    }
-    m_buffer[m_data_end] = elem;
-    m_data_end = (m_data_end + 1) % N;
     if (m_size == N) {
+        if (!overwrite) {
+            return;
+        }
         m_data_start = (m_data_start + 1) % N;
     } else {
         ++m_size;
     }
+    m_buffer[m_data_end] = elem;
+    m_data_end = (m_data_end + 1) % N;
 }
 
 template<typename T, std::size_t N>
