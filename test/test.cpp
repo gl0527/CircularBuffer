@@ -10,10 +10,10 @@ TEST(CircularBufferTest, PushTest) {
     cb.push(-3.2f, false);
     cb.push(-0.2f, false);
     cb.push(-0.3f, true);
-    EXPECT_FLOAT_EQ(cb.pop(), 2.0f);
-    EXPECT_FLOAT_EQ(cb.pop(), 88.0f);
-    EXPECT_FLOAT_EQ(cb.pop(), -3.2f);
-    EXPECT_FLOAT_EQ(cb.pop(), -0.3f);
+    EXPECT_FLOAT_EQ(2.0f, cb.pop());
+    EXPECT_FLOAT_EQ(88.0f, cb.pop());
+    EXPECT_FLOAT_EQ(-3.2f, cb.pop());
+    EXPECT_FLOAT_EQ(-0.3f, cb.pop());
 }
 
 TEST(CircularBufferTest, PopTest) {
@@ -21,15 +21,15 @@ TEST(CircularBufferTest, PopTest) {
     EXPECT_DEATH(cb.pop(), "");
     cb.push(1);
     int e = cb.pop();
-    EXPECT_EQ(e, 1);
+    EXPECT_EQ(1, e);
     cb.push(0);
     cb.push(1);
     cb.push(2);
     cb.push(3);
     cb.push(4);
-    EXPECT_EQ(cb.pop(), 2);
-    EXPECT_EQ(cb.pop(), 3);
-    EXPECT_EQ(cb.pop(), 4);
+    EXPECT_EQ(2, cb.pop());
+    EXPECT_EQ(3, cb.pop());
+    EXPECT_EQ(4, cb.pop());
 }
 
 TEST(CircularBufferTest, ResetTest) {
@@ -46,22 +46,22 @@ TEST(CircularBufferTest, ResetTest) {
 
 TEST(CircularBufferTest, SizeTest) {
     CircularBuffer<int, 3> cb;
-    EXPECT_EQ(cb.size(), 0);
+    EXPECT_EQ(0, cb.size());
     cb.push(11);
-    EXPECT_EQ(cb.size(), 1);
+    EXPECT_EQ(1, cb.size());
     cb.push(9);
-    EXPECT_EQ(cb.size(), 2);
+    EXPECT_EQ(2, cb.size());
     cb.push(10);
-    EXPECT_EQ(cb.size(), 3);
+    EXPECT_EQ(3, cb.size());
     cb.push(1);
-    EXPECT_EQ(cb.size(), 3);
+    EXPECT_EQ(3, cb.size());
     cb.pop();
-    EXPECT_EQ(cb.size(), 2);
+    EXPECT_EQ(2, cb.size());
 }
 
 TEST(CircularBufferTest, CapacityTest) {
     constexpr CircularBuffer<short, 2> cb;
-    EXPECT_EQ(cb.capacity(), 2);
+    EXPECT_EQ(2, cb.capacity());
 }
 
 TEST(CircularBufferTest, EmptyTest) {
