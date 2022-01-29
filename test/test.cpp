@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 
+using namespace lg;
+
 TEST(CircularBufferTest, PushTest) {
     CircularBuffer<float, 4> cb;
     cb.push(1);

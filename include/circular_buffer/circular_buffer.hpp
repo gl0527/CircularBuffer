@@ -11,6 +11,8 @@
 
 #include <cassert>
 
+namespace lg {
+
 /**
  * @brief Circular buffer implementation.
  * @tparam T Type of buffered elements.
@@ -122,5 +124,7 @@ template<typename T, std::size_t N>
 inline bool CircularBuffer<T, N>::full() const noexcept {
     return m_size == N;
 }
+
+}   // namespace lg
 
 #endif  // #ifndef CIRCULAR_BUFFER_HPP
