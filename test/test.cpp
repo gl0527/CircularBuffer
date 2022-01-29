@@ -92,6 +92,20 @@ TEST(CircularBufferTest, FullTest) {
     EXPECT_TRUE(cb.full());
 }
 
+TEST(CircularBufferTest, PerformanceTest) {
+    constexpr uint64_t limit{3'000'000'000};
+    constexpr std::size_t capacity{4096};
+
+    CircularBuffer<int, capacity> cb;
+
+    for (uint64_t i = 0; i < limit; ++i) {
+        cb.push(2);
+    }
+    for (std::size_t i = 0; i < capacity; ++i) {
+        EXPECT_EQ(2, cb.pop());
+    }
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
