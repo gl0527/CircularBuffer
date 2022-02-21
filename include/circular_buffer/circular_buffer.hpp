@@ -20,15 +20,16 @@ struct is_pow2 {
 };
 
 template<std::size_t N>
-constexpr std::enable_if_t<is_pow2<N>::value> modinc(std::size_t& m) noexcept {
-    m = (m + 1) & (N - 1);
+constexpr std::enable_if_t<is_pow2<N>::value, std::size_t> modinc(std::size_t m) noexcept {
+    return (m + 1) & (N - 1);
 }
 
 template<std::size_t N>
-constexpr std::enable_if_t<!is_pow2<N>::value> modinc(std::size_t& m) noexcept {
-    if ((++m) == N) {
-        m = 0;
+constexpr std::enable_if_t<!is_pow2<N>::value, std::size_t> modinc(std::size_t m) noexcept {
+    if ((m + 1) == N) {
+        return 0;
     }
+    return m + 1;
 }
 
 /**
@@ -99,19 +100,19 @@ void CircularBuffer<T, N>::push(T const &elem, bool overwrite) noexcept {
         if (!overwrite) {
             return;
         }
-        modinc<N>(m_data_start);
+        m_data_start = modinc<N>(m_data_start);
     } else {
         ++m_size;
     }
     m_buffer[m_data_end] = elem;
-    modinc<N>(m_data_end);
+    m_data_end = modinc<N>(m_data_end);
 }
 
 template<typename T, std::size_t N>
 T CircularBuffer<T, N>::pop() noexcept {
     assert(m_size > 0);
     T tmp = m_buffer[m_data_start];
-    modinc<N>(m_data_start);
+    m_data_start = modinc<N>(m_data_start);
     --m_size;
     return tmp;
 }
