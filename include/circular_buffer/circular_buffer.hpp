@@ -10,8 +10,26 @@
 #define CIRCULAR_BUFFER_HPP
 
 #include <cassert>
+#include <type_traits>
 
 namespace lg {
+
+template<std::size_t N>
+struct is_pow2 {
+    static constexpr bool value = N > 0 && ((N & (N - 1)) == 0);
+};
+
+template<std::size_t N>
+constexpr std::enable_if_t<is_pow2<N>::value> modinc(std::size_t& m) noexcept {
+    m = (m + 1) & (N - 1);
+}
+
+template<std::size_t N>
+constexpr std::enable_if_t<!is_pow2<N>::value> modinc(std::size_t& m) noexcept {
+    if ((++m) == N) {
+        m = 0;
+    }
+}
 
 /**
  * @brief Circular buffer implementation.
@@ -81,19 +99,19 @@ void CircularBuffer<T, N>::push(T const &elem, bool overwrite) noexcept {
         if (!overwrite) {
             return;
         }
-        m_data_start = (m_data_start + 1) % N;
+        modinc<N>(m_data_start);
     } else {
         ++m_size;
     }
     m_buffer[m_data_end] = elem;
-    m_data_end = (m_data_end + 1) % N;
+    modinc<N>(m_data_end);
 }
 
 template<typename T, std::size_t N>
 T CircularBuffer<T, N>::pop() noexcept {
     assert(m_size > 0);
     T tmp = m_buffer[m_data_start];
-    m_data_start = (m_data_start + 1) % N;
+    modinc<N>(m_data_start);
     --m_size;
     return tmp;
 }
