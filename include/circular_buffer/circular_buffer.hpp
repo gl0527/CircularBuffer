@@ -20,12 +20,15 @@ struct is_pow2 {
 };
 
 template<std::size_t N>
-constexpr std::enable_if_t<is_pow2<N>::value, std::size_t> modinc(std::size_t m) noexcept {
+constexpr bool is_pow2_v = is_pow2<N>::value;
+
+template<std::size_t N>
+constexpr std::enable_if_t<is_pow2_v<N>, std::size_t> modinc(std::size_t m) noexcept {
     return (m + 1) & (N - 1);
 }
 
 template<std::size_t N>
-constexpr std::enable_if_t<!is_pow2<N>::value, std::size_t> modinc(std::size_t m) noexcept {
+constexpr std::enable_if_t<!is_pow2_v<N>, std::size_t> modinc(std::size_t m) noexcept {
     if ((m + 1) == N) {
         return 0;
     }
