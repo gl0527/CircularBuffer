@@ -38,7 +38,8 @@ public:
      *                      If false, subsequent elements get ignored.
      * @return Void.
      */
-    // Note: 2 different implementations are provided, 1 for power-of-2 numbers, and 1 for the rest.
+    // Note: 2 implementations are provided because of modulo optimization,
+    // 1 for power-of-2 numbers, and 1 for the rest.
     template<std::size_t U = N, std::enable_if_t<is_pow2_v<U>>* = nullptr>
     void push(T const& elem, bool overwrite = true) noexcept;
 
@@ -49,7 +50,8 @@ public:
      * @brief Gives back the first element of the buffer, and also removes it from there.
      * @return The first element of the buffer.
      */
-    // Note: 2 different implementations are provided, 1 for power-of-2 numbers, and 1 for the rest.
+    // Note: 2 implementations are provided because of modulo optimization,
+    // 1 for power-of-2 numbers, and 1 for the rest.
     template<std::size_t U = N, std::enable_if_t<is_pow2_v<U>>* = nullptr>
     T pop() noexcept;
 
