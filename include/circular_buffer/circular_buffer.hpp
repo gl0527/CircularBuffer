@@ -22,19 +22,6 @@ struct is_pow2 {
 template<std::size_t N>
 constexpr bool is_pow2_v = is_pow2<N>::value;
 
-template<std::size_t N, std::enable_if_t<is_pow2_v<N>>* = nullptr>
-constexpr std::size_t modinc(std::size_t m) noexcept {
-    return (m + 1) & (N - 1);
-}
-
-template<std::size_t N, std::enable_if_t<!is_pow2_v<N>>* = nullptr>
-constexpr std::size_t modinc(std::size_t m) noexcept {
-    if ((m + 1) == N) {
-        return 0;
-    }
-    return m + 1;
-}
-
 /**
  * @brief Circular buffer implementation.
  * @tparam T Type of buffered elements.
@@ -51,12 +38,22 @@ public:
      *                      If false, subsequent elements get ignored.
      * @return Void.
      */
+    // Note: 2 different implementations are provided, 1 for power-of-2 numbers, and 1 for the rest.
+    template<std::size_t U = N, std::enable_if_t<is_pow2_v<U>>* = nullptr>
+    void push(T const& elem, bool overwrite = true) noexcept;
+
+    template<std::size_t U = N, std::enable_if_t<!is_pow2_v<U>>* = nullptr>
     void push(T const& elem, bool overwrite = true) noexcept;
 
     /**
      * @brief Gives back the first element of the buffer, and also removes it from there.
      * @return The first element of the buffer.
      */
+    // Note: 2 different implementations are provided, 1 for power-of-2 numbers, and 1 for the rest.
+    template<std::size_t U = N, std::enable_if_t<is_pow2_v<U>>* = nullptr>
+    T pop() noexcept;
+
+    template<std::size_t U = N, std::enable_if_t<!is_pow2_v<U>>* = nullptr>
     T pop() noexcept;
 
     /**
@@ -98,24 +95,57 @@ private:
 };
 
 template<typename T, std::size_t N>
+template<std::size_t U, std::enable_if_t<is_pow2_v<U>>*>
 void CircularBuffer<T, N>::push(T const &elem, bool overwrite) noexcept {
     if (m_size == N) {
         if (!overwrite) {
             return;
         }
-        m_data_start = modinc<N>(m_data_start);
+        m_data_start = (m_data_start + 1) & (N - 1);
     } else {
         ++m_size;
     }
     m_buffer[m_data_end] = elem;
-    m_data_end = modinc<N>(m_data_end);
+    m_data_end = (m_data_end + 1) & (N - 1);
 }
 
 template<typename T, std::size_t N>
-T CircularBuffer<T, N>::pop() noexcept {
+template<std::size_t U, std::enable_if_t<!is_pow2_v<U>>*>
+void CircularBuffer<T, N>::push(T const &elem, bool overwrite) noexcept {
+    if (m_size == N) {
+        if (!overwrite) {
+            return;
+        }
+        if (++m_data_start == N) {
+            m_data_start = 0;
+        }
+    } else {
+        ++m_size;
+    }
+    m_buffer[m_data_end] = elem;
+    if (++m_data_end == N) {
+        m_data_end = 0;
+    }
+}
+
+template<typename T, std::size_t N>
+template<std::size_t U, std::enable_if_t<is_pow2_v<U>>*>
+T CircularBuffer<T,N>::pop() noexcept {
     assert(m_size > 0);
     T tmp = m_buffer[m_data_start];
-    m_data_start = modinc<N>(m_data_start);
+    m_data_start = (m_data_start + 1) & (N - 1);
+    --m_size;
+    return tmp;
+}
+
+template<typename T, std::size_t N>
+template<std::size_t U, std::enable_if_t<!is_pow2_v<U>>*>
+T CircularBuffer<T,N>::pop() noexcept {
+    assert(m_size > 0);
+    T tmp = m_buffer[m_data_start];
+    if (++m_data_start == N) {
+        m_data_start = 0;
+    }
     --m_size;
     return tmp;
 }
