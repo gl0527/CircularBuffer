@@ -6,16 +6,32 @@ using namespace lg;
 
 TEST(CircularBufferTest, PushTest) {
     CircularBuffer<float, 4> cb;
+
     cb.push(1);
-    cb.push(2.0f, true);
-    cb.push(88, false);
-    cb.push(-3.2f, false);
-    cb.push(-0.2f, false);
-    cb.push(-0.3f, true);
-    EXPECT_FLOAT_EQ(2.0f, cb.pop());
+    cb.push(2.0f);
+    cb.push(88);
+    cb.push(-3.2f);
+    cb.push(-0.2f);
+    cb.push(-0.3f);
+
     EXPECT_FLOAT_EQ(88.0f, cb.pop());
     EXPECT_FLOAT_EQ(-3.2f, cb.pop());
+    EXPECT_FLOAT_EQ(-0.2f, cb.pop());
     EXPECT_FLOAT_EQ(-0.3f, cb.pop());
+
+    CircularBuffer<float, 4, false> cb2;
+
+    cb2.push(1);
+    cb2.push(2.0f);
+    cb2.push(88);
+    cb2.push(-3.2f);
+    cb2.push(-0.2f);
+    cb2.push(-0.3f);
+
+    EXPECT_FLOAT_EQ(1, cb2.pop());
+    EXPECT_FLOAT_EQ(2.0f, cb2.pop());
+    EXPECT_FLOAT_EQ(88, cb2.pop());
+    EXPECT_FLOAT_EQ(-3.2f, cb2.pop());
 }
 
 TEST(CircularBufferTest, PopTest) {
