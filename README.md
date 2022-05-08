@@ -6,7 +6,7 @@ A header-only library which implements the [circular buffer data structure](http
 
 Install external dependencies via package manager:
 ```sh
-$ sudo apt install -y git cmake g++ libgtest-dev
+$ sudo apt install -y git cmake g++
 ```
 
 ## Build
