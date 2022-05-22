@@ -25,7 +25,7 @@ $ git submodule update --init
 
 ```sh
 $ mkdir build && cd build
-$ cmake -DBUILD_TESTING=ON ../
+$ cmake ../
 $ make -j
 ```
 

@@ -8,7 +8,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -W -Wall -Wextra -Winit-self -
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE include/circular_buffer)
 
-if (BUILD_TESTING)
+option(BUILD_TESTS "Build unit tests." ON)
+
+if (BUILD_TESTS)
     enable_testing()
     include(GoogleTest)
     add_subdirectory(test)
