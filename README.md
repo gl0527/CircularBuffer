@@ -6,7 +6,7 @@ A header-only library which implements the [circular buffer data structure](http
 
 Install external dependencies via package manager:
 ```sh
-$ sudo apt install -y git cmake g++
+$ sudo apt install -y git cmake g++ doxygen
 ```
 
 ## Downloading this repository
@@ -20,6 +20,14 @@ If the repository was cloned non-recursively previously, use the following comma
 ```sh
 $ git submodule update --init
 ```
+
+## Generate documentation
+Execute the following command in the root of the repository:
+```sh
+$ doxygen
+```
+The command above generates a `doc/` folder in the root of the repository,
+containing the generated documentation in HTML and LaTeX format.
 
 ## Build
 
