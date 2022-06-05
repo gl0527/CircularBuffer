@@ -10,6 +10,7 @@
 #define CIRCULAR_BUFFER_HPP
 
 #include <cassert>
+#include <cstdlib>
 
 namespace lg {
 

@@ -1,5 +1,5 @@
 add_executable(CircularBufferTest test.cpp)
-target_link_libraries(CircularBufferTest PRIVATE gtest_main pthread CircularBuffer)
+target_link_libraries(CircularBufferTest PRIVATE gtest_main CircularBuffer)
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/lib/gtest" "lib/gtest")
 
