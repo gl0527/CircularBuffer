@@ -27,7 +27,6 @@ public:
      * @param[in] overwrite A flag which determines what should happen if the buffer is full.
      *                      If true, subsequent elements will overwrite previously added ones.
      *                      If false, subsequent elements get ignored.
-     * @return Void.
      */
     void push(T const& elem, bool overwrite = true) noexcept;
 
@@ -39,8 +38,8 @@ public:
 
     /**
      * @brief Resets the buffer to its initial state.
+     *
      * This function only resets the indices and size variables, but does not alter the buffer.
-     * @return Void.
      */
     void reset() noexcept;
 
