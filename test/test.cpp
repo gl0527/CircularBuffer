@@ -94,7 +94,7 @@ TEST(CircularBufferTest, FullTest) {
 
 TEST(CircularBufferTest, PerformanceTest) {
     constexpr uint64_t limit{3'000'000'000};
-    constexpr std::size_t capacity{4096};
+    constexpr std::size_t capacity{32};
 
     CircularBuffer<int, capacity> cb;
 
