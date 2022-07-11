@@ -72,29 +72,28 @@ private:
     T m_buffer[N]{};                ///< The array which contains all the elements.
     std::size_t m_data_start{0};    ///< The index where the data starts.
     std::size_t m_data_end{0};      ///< The index after the last element of the data.
-    std::size_t m_size{0};          ///< The number of elements in the array.
+    bool full_{false};              ///< A flag which is true when the buffer is full.
 };
 
 template<typename T, std::size_t N>
 void CircularBuffer<T, N>::push(T const &elem, bool overwrite) noexcept {
-    if (m_size == N) {
+    if (full_) {
         if (!overwrite) {
             return;
         }
         m_data_start = (m_data_start + 1) % N;
-    } else {
-        ++m_size;
     }
     m_buffer[m_data_end] = elem;
     m_data_end = (m_data_end + 1) % N;
+    full_ = m_data_start == m_data_end;
 }
 
 template<typename T, std::size_t N>
 T CircularBuffer<T, N>::pop() noexcept {
-    assert(m_size > 0);
+    assert(!empty());
     T tmp = m_buffer[m_data_start];
     m_data_start = (m_data_start + 1) % N;
-    --m_size;
+    full_ = false;
     return tmp;
 }
 
@@ -102,12 +101,20 @@ template<typename T, std::size_t N>
 inline void CircularBuffer<T, N>::reset() noexcept {
     m_data_start = 0;
     m_data_end = 0;
-    m_size = 0;
+    full_ = false;
 }
 
 template<typename T, std::size_t N>
 inline std::size_t CircularBuffer<T, N>::size() const noexcept {
-    return m_size;
+    if (full_) {
+        return N;
+    }
+
+    if (m_data_end >= m_data_start) {
+        return m_data_end - m_data_start;
+    }
+
+    return N + m_data_end - m_data_start;
 }
 
 template<typename T, std::size_t N>
@@ -117,12 +124,12 @@ constexpr std::size_t CircularBuffer<T, N>::capacity() const noexcept {
 
 template<typename T, std::size_t N>
 inline bool CircularBuffer<T, N>::empty() const noexcept {
-    return m_size == 0;
+    return !full_ && m_data_start == m_data_end;
 }
 
 template<typename T, std::size_t N>
 inline bool CircularBuffer<T, N>::full() const noexcept {
-    return m_size == N;
+    return full_;
 }
 
 }   // namespace lg
