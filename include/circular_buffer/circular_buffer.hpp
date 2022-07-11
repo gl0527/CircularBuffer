@@ -69,10 +69,10 @@ public:
     bool full() const noexcept;
 
 private:
-    T m_buffer[N]{};                ///< The array which contains all the elements.
-    std::size_t m_data_start{0};    ///< The index where the data starts.
-    std::size_t m_data_end{0};      ///< The index after the last element of the data.
-    bool full_{false};              ///< A flag which is true when the buffer is full.
+    T buffer_[N]{};             ///< The array which contains all the elements.
+    std::size_t head_{0};       ///< The index where the data starts.
+    std::size_t tail_{0};       ///< The index after the last element of the data.
+    bool full_{false};          ///< A flag which is true when the buffer is full.
 };
 
 template<typename T, std::size_t N>
@@ -81,26 +81,26 @@ void CircularBuffer<T, N>::push(T const &elem, bool overwrite) noexcept {
         if (!overwrite) {
             return;
         }
-        m_data_start = (m_data_start + 1) % N;
+        head_ = (head_ + 1) % N;
     }
-    m_buffer[m_data_end] = elem;
-    m_data_end = (m_data_end + 1) % N;
-    full_ = m_data_start == m_data_end;
+    buffer_[tail_] = elem;
+    tail_ = (tail_ + 1) % N;
+    full_ = head_ == tail_;
 }
 
 template<typename T, std::size_t N>
 T CircularBuffer<T, N>::pop() noexcept {
     assert(!empty());
-    T tmp = m_buffer[m_data_start];
-    m_data_start = (m_data_start + 1) % N;
+    T tmp = buffer_[head_];
+    head_ = (head_ + 1) % N;
     full_ = false;
     return tmp;
 }
 
 template<typename T, std::size_t N>
 inline void CircularBuffer<T, N>::reset() noexcept {
-    m_data_start = 0;
-    m_data_end = 0;
+    head_ = 0;
+    tail_ = 0;
     full_ = false;
 }
 
@@ -110,11 +110,11 @@ inline std::size_t CircularBuffer<T, N>::size() const noexcept {
         return N;
     }
 
-    if (m_data_end >= m_data_start) {
-        return m_data_end - m_data_start;
+    if (tail_ >= head_) {
+        return tail_ - head_;
     }
 
-    return N + m_data_end - m_data_start;
+    return N + tail_ - head_;
 }
 
 template<typename T, std::size_t N>
@@ -124,7 +124,7 @@ constexpr std::size_t CircularBuffer<T, N>::capacity() const noexcept {
 
 template<typename T, std::size_t N>
 inline bool CircularBuffer<T, N>::empty() const noexcept {
-    return !full_ && m_data_start == m_data_end;
+    return !full_ && head_ == tail_;
 }
 
 template<typename T, std::size_t N>
