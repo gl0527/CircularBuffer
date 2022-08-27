@@ -32,6 +32,15 @@ public:
     void push(T const& elem, bool overwrite = true) noexcept;
 
     /**
+     * @brief Adds an element to the buffer (after the last element).
+     * @param[in] elem The element to be added to the buffer.
+     * @param[in] overwrite A flag which determines what should happen if the buffer is full.
+     *                      If true, subsequent elements will overwrite previously added ones.
+     *                      If false, subsequent elements get ignored.
+     */
+    void push(T &&elem, bool overwrite = true) noexcept;
+
+    /**
      * @brief Gives back the first element of the buffer, and also removes it from there.
      * @return The first element of the buffer.
      */
@@ -89,12 +98,25 @@ void CircularBuffer<T, N>::push(T const &elem, bool overwrite) noexcept {
 }
 
 template<typename T, std::size_t N>
+void CircularBuffer<T, N>::push(T &&elem, bool overwrite) noexcept {
+    if (full_) {
+        if (!overwrite) {
+            return;
+        }
+        head_ = (head_ + 1) % N;
+    }
+    buffer_[tail_] = std::move(elem);
+    tail_ = (tail_ + 1) % N;
+    full_ = head_ == tail_;
+}
+
+template<typename T, std::size_t N>
 T CircularBuffer<T, N>::pop() noexcept {
     assert(!empty());
-    T tmp = buffer_[head_];
+    const auto old_head = head_;
     head_ = (head_ + 1) % N;
     full_ = false;
-    return tmp;
+    return std::move(buffer_[old_head]);
 }
 
 template<typename T, std::size_t N>
