@@ -106,6 +106,32 @@ TEST(CircularBufferTest, PerformanceTest) {
     }
 }
 
+TEST(CircularBufferTest, PerformanceTestOnBigObject) {
+    constexpr uint64_t limit{ 300'000'000 };
+    constexpr std::size_t capacity{ 16 };
+
+    struct BigObject {
+        char arr[1024];
+
+        BigObject() = default;
+
+        BigObject(BigObject const&) = delete;
+        BigObject& operator=(BigObject const&) = delete;
+
+        BigObject(BigObject&&) = default;
+        BigObject& operator=(BigObject&&) = default;
+    };
+
+    CircularBuffer<BigObject, capacity> cb;
+
+    for (uint64_t i = 0; i < limit; ++i) {
+        cb.push(BigObject{});
+    }
+    for (std::size_t i = 0; i < capacity; ++i) {
+        EXPECT_NO_THROW(cb.pop());
+    }
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
