@@ -1,6 +1,7 @@
 #include "circular_buffer/circular_buffer.hpp"
 
 #include <gtest/gtest.h>
+#include <string>
 
 using namespace lg;
 
@@ -107,19 +108,19 @@ TEST(CircularBufferTest, PerformanceTest) {
 }
 
 TEST(CircularBufferTest, PerformanceTestOnBigObject) {
-    constexpr uint64_t limit{ 300'000'000 };
-    constexpr std::size_t capacity{ 16 };
+    constexpr uint64_t limit{300'000'000};
+    constexpr std::size_t capacity{16};
 
     struct BigObject {
         char arr[1024];
 
         BigObject() = default;
 
-        BigObject(BigObject const&) = delete;
-        BigObject& operator=(BigObject const&) = delete;
+        BigObject(BigObject const &) = delete;
+        BigObject &operator=(BigObject const &) = delete;
 
-        BigObject(BigObject&&) = default;
-        BigObject& operator=(BigObject&&) = default;
+        BigObject(BigObject &&) = default;
+        BigObject &operator=(BigObject &&) = default;
     };
 
     CircularBuffer<BigObject, capacity> cb;
@@ -132,8 +133,73 @@ TEST(CircularBufferTest, PerformanceTestOnBigObject) {
     }
 }
 
-int main(int argc, char **argv)
-{
+TEST(CircularBufferTest, RuleOfFiveTest) {
+    // ctor
+    CircularBuffer<std::string, 4> buf1;
+
+    buf1.push("apple");
+    buf1.push("pear");
+    buf1.push("plum");
+    buf1.push("peach");
+
+    // copy ctor
+    auto buf2 = buf1;
+
+    EXPECT_STREQ(buf2.pop().c_str(), "apple");
+    EXPECT_STREQ(buf2.pop().c_str(), "pear");
+    EXPECT_STREQ(buf2.pop().c_str(), "plum");
+    EXPECT_STREQ(buf2.pop().c_str(), "peach");
+
+    // ref
+    auto &buf3 = buf1;
+    // copy ctor
+    auto buf4 = buf2;
+    // copy assignment
+    buf4 = buf3;
+
+    EXPECT_STREQ(buf4.pop().c_str(), "apple");
+    EXPECT_STREQ(buf4.pop().c_str(), "pear");
+    EXPECT_STREQ(buf4.pop().c_str(), "plum");
+    EXPECT_STREQ(buf4.pop().c_str(), "peach");
+
+    buf2.push("car");
+    buf2.push("bike");
+    buf2.push("truck");
+    buf2.push("bicycle");
+
+    // move ctor
+    auto buf5 = std::move(buf2);
+
+    EXPECT_STREQ(buf5.pop().c_str(), "car");
+    EXPECT_STREQ(buf5.pop().c_str(), "bike");
+    EXPECT_STREQ(buf5.pop().c_str(), "truck");
+    EXPECT_STREQ(buf5.pop().c_str(), "bicycle");
+
+    EXPECT_STRNE(buf2.pop().c_str(), "car");
+    EXPECT_STRNE(buf2.pop().c_str(), "bike");
+    EXPECT_STRNE(buf2.pop().c_str(), "truck");
+    EXPECT_STRNE(buf2.pop().c_str(), "bicycle");
+
+    buf5.push("triangle");
+    buf5.push("rectangle");
+    buf5.push("square");
+    buf5.push("sphere");
+
+    // move assignment
+    buf4 = std::move(buf5);
+
+    EXPECT_STREQ(buf4.pop().c_str(), "triangle");
+    EXPECT_STREQ(buf4.pop().c_str(), "rectangle");
+    EXPECT_STREQ(buf4.pop().c_str(), "square");
+    EXPECT_STREQ(buf4.pop().c_str(), "sphere");
+
+    EXPECT_STRNE(buf5.pop().c_str(), "triangle");
+    EXPECT_STRNE(buf5.pop().c_str(), "rectangle");
+    EXPECT_STRNE(buf5.pop().c_str(), "square");
+    EXPECT_STRNE(buf5.pop().c_str(), "sphere");
+}
+
+int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
