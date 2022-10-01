@@ -155,6 +155,14 @@ inline bool CircularBuffer<T, N>::full() const noexcept {
     return full_;
 }
 
+// Non-member functions
+
+template<typename T, std::size_t N>
+CircularBuffer<T, N>& operator<<(CircularBuffer<T, N>& buffer, T&& elem) {
+    buffer.push(std::forward<T>(elem));
+    return buffer;
+}
+
 }   // namespace lg
 
 #endif  // #ifndef CIRCULAR_BUFFER_HPP

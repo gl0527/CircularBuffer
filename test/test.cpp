@@ -199,6 +199,32 @@ TEST(CircularBufferTest, RuleOfFiveTest) {
     EXPECT_STRNE(buf5.pop().c_str(), "sphere");
 }
 
+TEST(CircularBufferTest, LeftShiftOperatorTest) {
+    CircularBuffer<int, 8> cb;
+
+    cb << 6 << 2 << 5 << 19 << 0 << -7;
+
+    EXPECT_EQ(6, cb.pop());
+    EXPECT_EQ(2, cb.pop());
+    EXPECT_EQ(5, cb.pop());
+    EXPECT_EQ(19, cb.pop());
+    EXPECT_EQ(0, cb.pop());
+    EXPECT_EQ(-7, cb.pop());
+
+    cb.reset();
+
+    cb << 9 << 2 << 16 << 22 << -3 << 1 << 101 << 7 << 42;
+
+    EXPECT_EQ(2, cb.pop());
+    EXPECT_EQ(16, cb.pop());
+    EXPECT_EQ(22, cb.pop());
+    EXPECT_EQ(-3, cb.pop());
+    EXPECT_EQ(1, cb.pop());
+    EXPECT_EQ(101, cb.pop());
+    EXPECT_EQ(7, cb.pop());
+    EXPECT_EQ(42, cb.pop());
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
