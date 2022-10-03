@@ -78,6 +78,14 @@ public:
      */
     bool full() const noexcept;
 
+    /**
+    * @brief Syntactic sugar for pushing elements into the buffer.
+    * @param[in] elem The element to be put into the buffer.
+    * @return The modified object.
+    */
+    template<typename U>
+    auto& operator<<(U&& elem) noexcept;
+
 private:
     T buffer_[N]{};             ///< The array which contains all the elements.
     std::size_t head_{0};       ///< The index where the data starts.
@@ -155,12 +163,11 @@ inline bool CircularBuffer<T, N>::full() const noexcept {
     return full_;
 }
 
-// Non-member functions
-
 template<typename T, std::size_t N>
-CircularBuffer<T, N>& operator<<(CircularBuffer<T, N>& buffer, T&& elem) {
-    buffer.push(std::forward<T>(elem));
-    return buffer;
+template<typename U>
+auto& CircularBuffer<T, N>::operator<<(U&& elem) noexcept {
+    push(std::forward<U>(elem));
+    return *this;
 }
 
 }   // namespace lg

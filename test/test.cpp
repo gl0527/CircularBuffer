@@ -213,16 +213,19 @@ TEST(CircularBufferTest, LeftShiftOperatorTest) {
 
     cb.reset();
 
-    cb << 9 << 2 << 16 << 22 << -3 << 1 << 101 << 7 << 42;
+    int a{ 101 }, b{ 42 };
 
-    EXPECT_EQ(2, cb.pop());
-    EXPECT_EQ(16, cb.pop());
-    EXPECT_EQ(22, cb.pop());
+    cb << 9 << 2 << 16 << 22 << -3 << 1 << a << 7 << b;
+    cb << b << 0 << a;
+
     EXPECT_EQ(-3, cb.pop());
     EXPECT_EQ(1, cb.pop());
-    EXPECT_EQ(101, cb.pop());
+    EXPECT_EQ(a, cb.pop());
     EXPECT_EQ(7, cb.pop());
-    EXPECT_EQ(42, cb.pop());
+    EXPECT_EQ(b, cb.pop());
+    EXPECT_EQ(b, cb.pop());
+    EXPECT_EQ(0, cb.pop());
+    EXPECT_EQ(a, cb.pop());
 }
 
 int main(int argc, char **argv) {
