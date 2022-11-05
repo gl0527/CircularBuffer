@@ -145,10 +145,10 @@ TEST(CircularBufferTest, RuleOfFiveTest) {
     // copy ctor
     auto buf2 = buf1;
 
-    EXPECT_STREQ(buf2.pop().c_str(), "apple");
-    EXPECT_STREQ(buf2.pop().c_str(), "pear");
-    EXPECT_STREQ(buf2.pop().c_str(), "plum");
-    EXPECT_STREQ(buf2.pop().c_str(), "peach");
+    EXPECT_STREQ("apple", buf2.pop().c_str());
+    EXPECT_STREQ("pear", buf2.pop().c_str());
+    EXPECT_STREQ("plum", buf2.pop().c_str());
+    EXPECT_STREQ("peach", buf2.pop().c_str());
 
     // ref
     auto &buf3 = buf1;
@@ -157,10 +157,10 @@ TEST(CircularBufferTest, RuleOfFiveTest) {
     // copy assignment
     buf4 = buf3;
 
-    EXPECT_STREQ(buf4.pop().c_str(), "apple");
-    EXPECT_STREQ(buf4.pop().c_str(), "pear");
-    EXPECT_STREQ(buf4.pop().c_str(), "plum");
-    EXPECT_STREQ(buf4.pop().c_str(), "peach");
+    EXPECT_STREQ("apple", buf4.pop().c_str());
+    EXPECT_STREQ("pear", buf4.pop().c_str());
+    EXPECT_STREQ("plum", buf4.pop().c_str());
+    EXPECT_STREQ("peach", buf4.pop().c_str());
 
     buf2.push("car");
     buf2.push("bike");
@@ -170,15 +170,15 @@ TEST(CircularBufferTest, RuleOfFiveTest) {
     // move ctor
     auto buf5 = std::move(buf2);
 
-    EXPECT_STREQ(buf5.pop().c_str(), "car");
-    EXPECT_STREQ(buf5.pop().c_str(), "bike");
-    EXPECT_STREQ(buf5.pop().c_str(), "truck");
-    EXPECT_STREQ(buf5.pop().c_str(), "bicycle");
+    EXPECT_STREQ("car", buf5.pop().c_str());
+    EXPECT_STREQ("bike", buf5.pop().c_str());
+    EXPECT_STREQ("truck", buf5.pop().c_str());
+    EXPECT_STREQ("bicycle", buf5.pop().c_str());
 
-    EXPECT_STRNE(buf2.pop().c_str(), "car");
-    EXPECT_STRNE(buf2.pop().c_str(), "bike");
-    EXPECT_STRNE(buf2.pop().c_str(), "truck");
-    EXPECT_STRNE(buf2.pop().c_str(), "bicycle");
+    EXPECT_STRNE("car", buf2.pop().c_str());
+    EXPECT_STRNE("bike", buf2.pop().c_str());
+    EXPECT_STRNE("truck", buf2.pop().c_str());
+    EXPECT_STRNE("bicycle", buf2.pop().c_str());
 
     buf5.push("triangle");
     buf5.push("rectangle");
@@ -188,15 +188,15 @@ TEST(CircularBufferTest, RuleOfFiveTest) {
     // move assignment
     buf4 = std::move(buf5);
 
-    EXPECT_STREQ(buf4.pop().c_str(), "triangle");
-    EXPECT_STREQ(buf4.pop().c_str(), "rectangle");
-    EXPECT_STREQ(buf4.pop().c_str(), "square");
-    EXPECT_STREQ(buf4.pop().c_str(), "sphere");
+    EXPECT_STREQ("triangle", buf4.pop().c_str());
+    EXPECT_STREQ("rectangle", buf4.pop().c_str());
+    EXPECT_STREQ("square", buf4.pop().c_str());
+    EXPECT_STREQ("sphere", buf4.pop().c_str());
 
-    EXPECT_STRNE(buf5.pop().c_str(), "triangle");
-    EXPECT_STRNE(buf5.pop().c_str(), "rectangle");
-    EXPECT_STRNE(buf5.pop().c_str(), "square");
-    EXPECT_STRNE(buf5.pop().c_str(), "sphere");
+    EXPECT_STRNE("triangle", buf5.pop().c_str());
+    EXPECT_STRNE("rectangle", buf5.pop().c_str());
+    EXPECT_STRNE("square", buf5.pop().c_str());
+    EXPECT_STRNE("sphere", buf5.pop().c_str());
 }
 
 TEST(CircularBufferTest, LeftShiftOperatorTest) {
